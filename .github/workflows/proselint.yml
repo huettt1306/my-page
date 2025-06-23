@@ -1,0 +1,30 @@
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+
+name: "Trigger: Proselint on Markdown"
+permissions: {}
+
+jobs:
+  proselint:
+    name: Proselint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Install proselint
+        run: pip install proselint
+
+      - name: Run Proselint on Markdown files
+        run: |
+          for file in $(find . -name "*.md"); do
+            echo "Checking $file"
+            proselint "$file"
+          done
+
